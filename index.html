@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>HowToBeGit</title>
+<link rel="stylesheet" type="text/css" href="type.css">
+<link rel="icon" href="images/favicon.png" type="image/png" />
+</head>
+<body>
+<div class="headline"><img src="images/gitlogo.svg" alt="Git logo" width="15" height="30"/><h1>How To Be Git!</h1></div>
+<div class="catalog">
+    <h4>i m catalog.</h4>
+    <ul>
+        <li><a href="#install-git-core">安裝</a></li>
+        <li><a href="#setup">設定</a></li>
+        <li><a href="#initial-repository">為專案建立 Repository</a></li>
+        <li><a href="#clone-repository">複製一份 Repository</a></li>
+        <li><a href="#new-branch-and-push">建立新的 branch，<br />
+        編輯，然後送回原位子</a></li>
+        <li><a href="#git-commit">Commit</a></li>
+        <li><a href="#git-reset">Reset</a></li>
+        <li><a href="#git-cherry-pick">Cherry-pick</a></li>
+        <li><a href="#git-tag">Tag</a></li>
+        <li><a href="#git-merge">Merge</a></li>
+        <li><a href="#git-rebase">Rebase</a></li>
+        <li><a href="#git-stash">Stash</a></li>
+        <li><a href="#others">其他指令</a></li>
+    </ul>
+</div>
+<div class="content">
+    <div class="part">
+        <h3><a name="install-git-core"></a>安裝 git-core </h3>
+        <p>install git-core on ubuntu</p>
+        <div class="layout">
+            <p>$ sudo apt-get install git-core</p>
+        </div>
+    </div>
+    <div class="part">
+        <h3><a name="setup"></a>設定</h3>
+        <p>使用 git 第一步是設定你的 user name 跟 user email</p>
+        <div class="layout"><p>$ git config --global user.name "nyo"<br />
+            $ git config --global user.email "nyo@mail.com"</p></div>
+        <p>設定檔會在 ~/.gitconfig<br />
+        或者可以下指令看</p>
+        <div class="layout"><p>$ git config -l</p></div>
+        <p>設定顯示顏色</p>
+        <div class="layout"><p>$ git config --global color.diff auto<br />
+        $ git config --global color.status auto<br />
+        $ git config --global color.branch auto<br />
+        $ git config --global color.log auto<br /></p></div>
+    </div>
+        <p># 自訂 log 格式到 lg，當然你也可以定義其他 alias</p>
+        <div class="layout"><p>
+$ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"</p></div>
+        <p>設定 commit 時，使用的編輯器<br />
+        預設是用系統預設的編輯器或者是 vi</p>
+        <div class="layout"><p>$ git config --global core.editor vim</p></div>
+        <p>設定你想用於處理 conflict 的 tools</p>
+        <div class="layout"><p>$ git config --global merge.tool gvimdiff</p></div>
+    <div class="part">
+        <h3><a name="initial-repository"></a>為專案建立 Repository</h3>
+        <p>假設專案的資料夾為 project</p>
+        <div class="layout"><p>
+        $ cd project/<br />
+        $ git init
+        </p></div>
+        <p>git 會建立一個 .git 的資料夾，所有 repository 所需要的資料都在裡面</p>
+        <p>接著將要讓 git 追蹤的檔案加入</p>
+        <div class="layout"><p>$ git add .<br />
+        (. 指目前所在的目錄，當然也可以指定檔案)</p></div>
+        <p>最後輸入 commit 指令，把資料 commit </p>
+        <div class="layout"><p>$ git commit</p></div>
+        <p>輸入指令後會進入編輯器，為目前的資料變動加上說明<br />
+        存檔後此次 commit 的資料就會加入 repository 中</p>
+    </div>
+    <div class="part">
+        <h3><a name="clone-repository"></a>複製一份 Repository</h3>
+    <p>以 git clone 的指令把其他地方的 repository 複製到你目前的工作目錄下<br />
+    可以用 git://, http(s)://, ssh:// 從網路複製，或直接從電腦中的其他資料夾複製</p>
+    <div class="layout"><p>$ git clone ssh://username@url/<路徑><br />
+        $ git clone <資料路徑></p></div>
+    <p>clone 完成後，來源的網址會存到 config 中的 remote origin 中</p>
+    </div>
+    <div class="part">
+        <h3><a name="new-branch-and-push"></a>建立新的 branch，編輯，然後送回原位子</h3>
+        <p>開一個新的 branch newBranch</p>
+        <div class="layout"><p>$ git branch newBranch<br />
+        $ git branch newBranch v2.5 # newBranch based at v2.5</p></div>
+        <p>如果你是跑</p>
+        <div class="layout"><p>$ git branch</p></div>
+        <p>會看目前你擁有的 branch ，有*的是目前所在的 branch</p>
+        <p>其他 branch 參數</p>
+        <div class="layout"><p>$ git branch -d &lt;branch&gt; #刪除 branch<br />
+            $ git branch -r #列出所有的 remote branch<br />
+            $ git branch -a #列出所有的 branch</p></div>
+        <p>切換到新的 branch</p>
+        <div class="layout"><p>$ git checkout newBranch</p></div>
+        <p>現在在新的 branch 上做任何修改都不會動到原本 master 上的資料了</p>
+        <p>修改創作完成後，就是要把修改的內容 commit 到 repository</p>
+        <div class="layout"><p>
+        # 加入新增的檔案（如果有的話）<br />
+        $ git add &lt;檔案&gt;<br />
+        # commit 全部修改的資料<br />
+        $ git commit -a<br />
+        </p></div>
+        <p>或者是</p>
+        <div class="layout"><p>$ git add -u #stage 修改的資料<br />
+        $ git commit</p></div>
+        <p>切換到 master</p>
+        <div class="layout"><p>$ git checkout master</p></div>
+        <p>再來要把資料 merge 並送回 origin，但是在那之前要先確定有沒有其他人 push 資料上去</p>
+        <div class="layout"><p>$ git pull [origin] [remote branch name]</p></div>
+        <p>事實上 pull 等於 fetch 新的資料並 merge 進local branch</p>
+        <p>更新完 master 後，將 master 和 newBranch merge 起來</p>
+        <div class="layout"><p>$ git merge newBranch</p></div>
+        <p>merge 時如果有 conflict 時，conflict 的部份會有&lt;&lt;&lt;&lt; ==== &gt;&gt;&gt;&gt;<br />
+        只要將 conflict 的部份修改再 commit 即可完成 merge 動作</p>
+        <p>最後將 master push 到 remote repository 工作就告一段落了</p>
+        <div class="layout"><p>
+            # push all branch<br />
+            $ git push origin<br />
+            $ git push &lt;remote&gt;<br />
+            $ git push &lt;remote&gt; &lt;local branch&gt;:&lt;remote branch&gt;
+        </p></div>
+        <p>沒辦法 push master?<br />
+        修改 remote 的 git config</p>
+        <div class="layout"><p>$ git config receive.denyCurrentBranch=ignore</p></div>
+    </div>
+    <div class="part">
+        <h3><a name="git-commit"></a>關於 Commit</h3>
+        <p>自動 stage 已修改或刪除的檔案，但是對新增的檔案沒有作用</p>
+        <div class="layout"><p>$ git commit -a</p></div>
+        <p></p>
+        <p>直接使用 "message" 當 commit message</p>
+        <div class="layout"><p>$ git commit -m "message"</p></div>
+        <p>commit 指定的 file，已 stage 的資料不會被 commit 依舊是 staged</p>
+        <div class="layout"><p>$ git commit &lt;file&gt;</p></div>
+        <p>修改當前 branch 最近一次的 commit</p>
+        <div class="layout"><p>$ git commit --amend</p></div>
+        <p>想要只 commit 部份的變動，可用以下指令，進入 Interactive mode</p>
+        <div class="layout"><p>$ git add -i</p></div>
+    </div>
+    <div class="part">
+        <h3><a name="git-reset"></a>關於 Reset</h3>
+        <p>working tree: 當前的工作資料 (unstage)<br />
+        HEAD: 目前所在的 commit (staging area)<br />
+        index: 儲存的 commit 資料 (repository)<br /><br />
+        reset 後，原本的 HEAD 會存到 ORIG_HEAD</p>
+        <p>reset HEAD 跟 index 到指定的 commit 而 working tree 不會變動</p>
+        <div class="layout"><p>$ git reset HEAD</p></div>
+        <p>reset HEAD 到指定的 commit </p>
+        <div class="layout"><p>$ git reset --soft HEAD<br />
+        $ git reset --soft HEAD^ # HEAD 的前一個 commit<br />
+        $ git reset --soft HEAD~3 # HEAD 的前三個 commit</p></div>
+        <p>reset HEAD, index, working tree 到指定的 commit</p>
+        <div class="layout"><p>$ git reset --hard HEAD</p></div>
+    </div>
+    <div class="part">
+        <h3><a name="git-cherry-pick"></a>關於 Cherry-pick</h3>
+    <p>要將已存在的 commit 拿來使用</p>
+    <div class="layout"><p>$ git cherry-pick &lt;commit&gt;<br />
+    $ git cherry-pick -n &lt;commit&gt; #只套用該 commit 的變動，不會 commit 出去</p></div>
+    </div>
+    <div class="part">
+        <h3><a name="git-tag"></a>關於 Tag</h3>
+        <p>commit 的編碼都很亂，加個 tag 很方便</p>
+        <div class="layout"><p>$ git tag &lt;tagname&gt; #為目前的 commit 加上 tag<br />
+        $ git tag &lt;tagname&gt; &lt;commit&gt; #為指定的 commit 加上 tag<br />
+        $ git tag -d &lt;tagname&gt; #刪除 tag</p></div>
+    </div>
+    <div class="part">
+        <h3><a name="git-merge"></a>關於 Merge</h3>
+        <p>假設當下所在的 branch 是 master</p>
+        <pre>          A---B---C topic
+         /
+    D---E---F---G master</pre>
+        <div class="layout"><p>$ git merge topic</p></div>
+        <p>topic 裡從 master 分支出來後的 commit(A, B, C) 會合到 master 並用一個新的 commit 加以記錄</p>
+        <pre>          A---B---C topic
+         /         \
+    D---E---F---G---H master</pre>
+        <p>merge 時如果有 conflict 時，conflict 的部份會有&lt;&lt;&lt;&lt; ==== &gt;&gt;&gt;&gt;<br />
+        只要將 conflict 的部份修改再 commit 即可完成 merge 動作</p>
+        <p>加上 --no-commit 執行 merge 不會自動 commit ，你可以在 commmit 前修改 merge 結果</p>
+        <div class="layout"><p>$ git merge --no-commit &lt;commit&gt;</p></div>
+    </div>
+    <div class="part">
+        <h3><a name="git-rebase"></a>關於 Rebase</h3>
+        <p>rebase 的基本用法：<br />
+        假設當下所在的 branch 是 topic</p>
+        <pre>          A---B---C topic
+         /
+    D---E---F---G master</pre>
+        <p>用以下指令：</p>
+        <div class="layout"><p>$ get rebase master<br />
+        $ git rebase master topic</p></div>
+        <pre>                  A'--B'--C' topic
+                 /
+    D---E---F---G master</pre>
+        <p>rebase --onto 的用法：<br />
+        假設目前的 commit tree 是：</p>
+        <pre>    o---o---o---o---o  master
+         \
+          o---o---o---o---o  next
+                           \
+                            o---o---o  topic</pre>
+        <p>想要把 topic 跟 master merge 但是又不要有 next 的資料</p>
+        <div class="layout"><p>$ git rebase --onto master next topic</p></div>
+        <p></p>
+        <pre>    o---o---o---o---o  master
+        |            \
+        |             o'--o'--o'  topic
+         \
+          o---o---o---o---o  next</pre>
+        <p>rebase 還可以移除 commit</p>
+        <pre>    E---F---G---H---I---J  topicA</pre>
+        <div class="layout"><p>$ git rebase --onto topicA~5 topicA~3 topicA</p></div>
+        <p>F 跟 G 就被刪掉了</p>
+        <pre>    E---H'---I'---J'  topicA</pre>
+        <p>rebase 的時候遇到 conflict 時，<br />
+        git rebase 會停在第一個有問題的 commit 並在 working tree 裡 mark conflict<br />
+        修正完 coflict 後再以 git-add 告知 git conflict 解除了<br />
+        再下指令繼續 rebase</p>
+        <div class="layout"><p>$ git rebase --continue</p></div>
+        <p>或者想要取消 rebase 動作</p>
+        <div class="layout"><p>$ git rebase --abort</p></div>
+    </div>
+    <div class="part">
+        <h3><a name="git-stash"></a>關於 Stash</h3>
+        <p>當你程式改到一半，還不打算 commit 修改的資料，但是又想要對 repository 有所動作時，就是用 stash 了<br />
+        將修改的資料先暫存起來，並回復到 HEAD 的狀態</p>
+        <div class="layout"><p>$ git stash</p></div>
+        <p>取出一筆記錄，並從 stash list 中移除，不指定 stash 的話預設會是 stash@{0}</p>
+        <div class="layout"><p>$ git stash pop [&lt;stash&gt;]</p></div>
+        <p>取出一筆記錄，但不移除</p>
+        <div class="layout"><p>$ git stash apply [&lt;stash&gt;]</p></div>
+        <p>顯示該筆 stash 的修改記錄</p>
+        <div class="layout"><p>$ git stash show [-p] [&lt;stash&gt;]</p></div>
+        <p>列出暫存區裡的所有資料</p>
+        <div class="layout"><p>$ git stash list</p></div>
+        <p>清空 stash list</p>
+        <div class="layout"><p>$ git stash clear</p></div>
+        <p>從指定的 stash 所在的 commit 建立並切換到一個新的 branch，並將 stash 的記錄套用到新的 working tree。<br />
+        成功執行後，該 stash 資料將被 drop</p>
+        <div class="layout"><p>$ git stash branch &lt;branchname&gt; [&lt;stash&gt;]</p></div>
+    </div>
+    <div class="part">
+        <h3><a name="others"></a>其他指令</h3>
+        <p></p>
+        <div class="layout"><p>$ git diff # 比較 commit 之間的差異<br />
+            $ git difftool<br />
+            $ git show<br />
+            $ git log<br />
+            $ git status # 查看 working tree 的狀態<br />
+            $ git grep<br />
+            $ git rm # 從 working tree 跟 index 中刪除檔案<br />
+            $ git mv # 移動或重新命名<br />
+            $ git svn # svn tool for git</p></div>
+    </div>
+</div>
+</body>
+</html>
